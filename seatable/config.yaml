@@ -1,10 +1,12 @@
 name: "SeaTable Server"
 description: "Installiert den SeaTable Server als Home Assistant Add-on."
-version: "2.2.0"
+version: "2.3.0" # Finale Version
 slug: "seatable"
 
 # --- Berechtigungen ---
+# Erlaubt dem Add-on, mit dem Docker-Dienst des Hosts zu kommunizieren
 docker_api: true
+# Erlaubt den Zugriff auf die HA-API (für Netzwerk-Infos)
 homeassistant_api: true
 
 boot: "auto"
