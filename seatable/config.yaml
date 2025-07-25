@@ -1,8 +1,12 @@
 name: "SeaTable Server"
 description: "SeaTable ist eine flexible No-Code-Plattform für Datenbanken und Projektmanagement. Dieses Add-on installiert den SeaTable Server."
-version: "1.1.0"
+version: "1.2.0" # Versionsnummer erhöht
 slug: "seatable"
+
+# --- Berechtigungen ---
 docker_api: true
+homeassistant_api: true # DIESE ZEILE IST NEU UND BEHEBT DEN FEHLER
+
 boot: "auto"
 init: false
 arch:
@@ -12,19 +16,18 @@ arch:
 
 url: "https://github.com/d-shmt/hass_seatable-addon"
 
-# Standard-Konfigurationsoptionen
+# --- Benutzer-Konfiguration ---
 options:
   http_port: 9080
   https_port: 9443
   mariadb_password: ""
 
-# Definiert die Eingabefelder im Konfigurations-Tab
 schema:
   http_port: "port"
   https_port: "port"
   mariadb_password: "password"
 
-# Mappt die Ports aus den Optionen auf das Host-System
+# --- Netzwerk ---
 ports:
   "80/tcp": 9080
   "443/tcp": 9443
@@ -33,6 +36,7 @@ ports_description:
   "80/tcp": "SeaTable Web Interface (HTTP)"
   "443/tcp": "SeaTable Web Interface (HTTPS)"
 
+# --- UI Integration ---
 webui: "http://[HOST]:[PORT:80]"
 ingress: true
 panel_icon: "mdi:database"
