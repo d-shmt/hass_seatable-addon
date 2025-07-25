@@ -5,7 +5,7 @@ name: "SeaTable Server"
 description: "SeaTable ist eine flexible No-Code-Plattform für Datenbanken und Projektmanagement. Dieses Add-on installiert den SeaTable Server."
 
 # Version deines Add-ons
-version: "1.0.0"
+version: "1.0.1"
 
 # Der eindeutige Bezeichner (Slug) für dein Add-on
 slug: "seatable"
@@ -30,13 +30,11 @@ url: "https://github.com/d-shmt/hass_seatable-addon"
 
 # Standard-Konfigurationsoptionen, die der Benutzer ändern kann
 options:
-  http_port: 80
-  https_port: 443
+  mariadb_password: ""
 
 # Definiert die Eingabefelder im Konfigurations-Tab des Add-ons
 schema:
-  http_port: "port"
-  https_port: "port"
+  mariadb_password: "password"
 
 # Mappt die Ports des Add-ons auf die Ports des Host-Systems
 ports:
