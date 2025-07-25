@@ -2,31 +2,27 @@
 
 SEATABLE_DIR="/opt/seatable"
 
-# Prüfen, ob die Installation bereits vorhanden ist
-if [ ! -f "${SEATABLE_DIR}/seatable.sh" ]; then
-    bashio::log.info "Keine SeaTable-Installation gefunden. Lade die neueste Version herunter..."
-    mkdir -p "${SEATABLE_DIR}"
-    cd "${SEATABLE_DIR}" || bashio::exit.nok "Konnte nicht in das Verzeichnis wechseln."
-    
-    wget -O seatable-compose.tar.gz "https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz"
-    
-    tar -xzf seatable-compose.tar.gz
-    rm seatable-compose.tar.gz
-    bashio::log.info "Download und Entpacken abgeschlossen."
-fi
+bashio::log.info "=== DEBUGGING-LAUF GESTARTET ==="
 
-# --- SeaTable Start ---
-bashio::log.info "Starte den SeaTable Server..."
+# Verzeichnis für einen sauberen Test leeren
+bashio::log.info "Lösche altes Verzeichnis..."
+rm -rf ${SEATABLE_DIR}/*
 
-# Sicherstellen, dass wir im richtigen Verzeichnis sind
-cd "${SEATABLE_DIR}" || bashio::exit.nok "Konnte nicht in das SeaTable-Verzeichnis wechseln."
+# Verzeichnis erstellen und dorthin wechseln
+mkdir -p "${SEATABLE_DIR}"
+cd "${SEATABLE_DIR}" || exit 1
 
-# Das Start-Skript ausführen
-./seatable.sh start
+bashio::log.info "Lade Datei herunter..."
+wget -O seatable-compose.tar.gz "https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz"
 
-bashio::log.info "SeaTable wurde gestartet. Es kann einige Minuten dauern, bis die Weboberfläche erreichbar ist."
+bashio::log.info "Entpacke die Datei..."
+tar -xzf seatable-compose.tar.gz
 
-# Endlosschleife
-while true; do
-  sleep 3600
-done
+bashio::log.info "=== START: INHALT VON ${SEATABLE_DIR} ==="
+ls -lR
+bashio::log.info "=== ENDE: INHALT VON ${SEATABLE_DIR} ==="
+
+bashio::log.info "Debugging beendet. Bitte kopiere die gesamten Logs ab 'DEBUGGING-LAUF GESTARTET'."
+
+# Skript hier absichtlich beenden
+exit 0
