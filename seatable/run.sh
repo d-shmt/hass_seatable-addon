@@ -1,28 +1,34 @@
 #!/usr/bin/with-contenv bashio
 
-SEATABLE_DIR="/opt/seatable"
+# Daten im persistenten /data-Verzeichnis speichern
+SEATABLE_DIR="/data/seatable"
 
-bashio::log.info "=== DEBUGGING-LAUF GESTARTET ==="
+# Prüfen, ob die Installation bereits vorhanden ist
+if [ ! -f "${SEATABLE_DIR}/seatable-server.yml" ]; then
+    bashio::log.info "Keine SeaTable-Installation gefunden. Lade die neueste Version herunter..."
+    mkdir -p "${SEATABLE_DIR}"
+    cd "${SEATABLE_DIR}" || bashio::exit.nok "Konnte nicht in das Verzeichnis wechseln."
+    
+    wget -O seatable-compose.tar.gz "https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz"
+    
+    tar -xzf seatable-compose.tar.gz
+    rm seatable-compose.tar.gz
+    bashio::log.info "Download und Entpacken abgeschlossen."
+fi
 
-# Verzeichnis für einen sauberen Test leeren
-bashio::log.info "Lösche altes Verzeichnis..."
-rm -rf ${SEATABLE_DIR}/*
+# --- SeaTable Start ---
+bashio::log.info "Starte den SeaTable Server via Docker Compose..."
 
-# Verzeichnis erstellen und dorthin wechseln
-mkdir -p "${SEATABLE_DIR}"
-cd "${SEATABLE_DIR}" || exit 1
+# Sicherstellen, dass wir im richtigen Verzeichnis sind
+cd "${SEATABLE_DIR}" || bashio::exit.nok "Konnte nicht in das SeaTable-Verzeichnis wechseln."
 
-bashio::log.info "Lade Datei herunter..."
-wget -O seatable-compose.tar.gz "https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz"
+# Der KORREKTE Startbefehl
+docker compose -f seatable-server.yml up -d
 
-bashio::log.info "Entpacke die Datei..."
-tar -xzf seatable-compose.tar.gz
+bashio::log.info "SeaTable-Container wurden gestartet. Der erste Start kann mehrere Minuten dauern."
+bashio::log.info "Der Status der einzelnen SeaTable-Dienste ist in deren eigenen Logs ersichtlich, nicht unbedingt hier."
 
-bashio::log.info "=== START: INHALT VON ${SEATABLE_DIR} ==="
-ls -lR
-bashio::log.info "=== ENDE: INHALT VON ${SEATABLE_DIR} ==="
-
-bashio::log.info "Debugging beendet. Bitte kopiere die gesamten Logs ab 'DEBUGGING-LAUF GESTARTET'."
-
-# Skript hier absichtlich beenden
-exit 0
+# Endlosschleife, damit das Add-on aktiv bleibt
+while true; do
+  sleep 3600
+done
