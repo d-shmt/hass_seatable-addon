@@ -7,6 +7,11 @@ HTTP_PORT=$(bashio::config 'http_port')
 HTTPS_PORT=$(bashio::config 'https_port')
 DB_PASSWORD=$(bashio::config 'mariadb_password')
 
+# --- Hostname automatisch ermitteln ---
+HOSTNAME=$(bashio::network.ipv4_address)
+bashio::log.info "SeaTable Hostname wird auf '${HOSTNAME}' gesetzt."
+export SEATABLE_SERVER_HOSTNAME=$HOSTNAME
+
 # --- Passwort validieren ---
 if [ -z "$DB_PASSWORD" ]; then
     bashio::log.fatal "Das MariaDB-Passwort ist nicht gesetzt! Bitte gehe zum 'Konfiguration'-Tab und setze ein Passwort."
@@ -32,14 +37,14 @@ cd "${SEATABLE_DIR}" || bashio::exit.nok
 
 # --- Ports dynamisch anpassen ---
 bashio::log.info "Passe Ports an: HTTP=${HTTP_PORT}, HTTPS=${HTTPS_PORT}"
-# Ersetzt die Standard-Ports in der SeaTable-Konfigurationsdatei
 sed -i "s/\"80:80\"/\"${HTTP_PORT}:80\"/g" seatable-server.yml
 sed -i "s/\"443:443\"/\"${HTTPS_PORT}:443\"/g" seatable-server.yml
 
 # --- Docker Compose ausführen ---
 docker compose -f seatable-server.yml up -d
 
-bashio::log.info "SeaTable-Container wurden gestartet."
+bashio::log.info "SeaTable-Container wurden gestartet. ✅"
+bashio::log.info "Du solltest SeaTable jetzt unter http://${HOSTNAME}:${HTTP_PORT} erreichen können."
 
 # Endlosschleife
 while true; do
