@@ -1,4 +1,4 @@
 # repository.yaml
-name: "Mein Home Assistant Add-on Repository"
+name: "SeaTable"
 url: "https://github.com/d-shmt/hass_seatable-addon"
 maintainer: "d-shmt"
