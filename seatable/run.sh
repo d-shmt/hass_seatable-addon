@@ -1,46 +1,47 @@
 #!/usr/bin/with-contenv bashio
 
-# Daten im persistenten /data-Verzeichnis speichern
 SEATABLE_DIR="/data/seatable"
 
-# Passwort aus der Konfiguration lesen
+# --- Konfiguration auslesen ---
+HTTP_PORT=$(bashio::config 'http_port')
+HTTPS_PORT=$(bashio::config 'https_port')
 DB_PASSWORD=$(bashio::config 'mariadb_password')
 
-# Sicherstellen, dass ein Passwort gesetzt wurde
+# --- Passwort validieren ---
 if [ -z "$DB_PASSWORD" ]; then
-    bashio::log.fatal "Das MariaDB-Passwort ist nicht gesetzt! Bitte gehe zum 'Konfiguration'-Tab des Add-ons und setze ein sicheres Passwort."
+    bashio::log.fatal "Das MariaDB-Passwort ist nicht gesetzt! Bitte gehe zum 'Konfiguration'-Tab und setze ein Passwort."
     bashio::exit.nok
 fi
-
-# Passwort als Umgebungsvariable für Docker Compose exportieren
 export MARIADB_PASSWORD=$DB_PASSWORD
 
-# Prüfen, ob die Installation bereits vorhanden ist
+# --- Installation (falls nötig) ---
 if [ ! -f "${SEATABLE_DIR}/seatable-server.yml" ]; then
     bashio::log.info "Keine SeaTable-Installation gefunden. Lade die neueste Version herunter..."
     mkdir -p "${SEATABLE_DIR}"
-    cd "${SEATABLE_DIR}" || bashio::exit.nok "Konnte nicht in das Verzeichnis wechseln."
+    cd "${SEATABLE_DIR}" || bashio::exit.nok
     
     wget -O seatable-compose.tar.gz "https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz"
-    
     tar -xzf seatable-compose.tar.gz
     rm seatable-compose.tar.gz
     bashio::log.info "Download und Entpacken abgeschlossen."
 fi
 
 # --- SeaTable Start ---
-bashio::log.info "Starte den SeaTable Server via Docker Compose..."
+bashio::log.info "Starte den SeaTable Server..."
+cd "${SEATABLE_DIR}" || bashio::exit.nok
 
-# Sicherstellen, dass wir im richtigen Verzeichnis sind
-cd "${SEATABLE_DIR}" || bashio::exit.nok "Konnte nicht in das SeaTable-Verzeichnis wechseln."
+# --- Ports dynamisch anpassen ---
+bashio::log.info "Passe Ports an: HTTP=${HTTP_PORT}, HTTPS=${HTTPS_PORT}"
+# Ersetzt die Standard-Ports in der SeaTable-Konfigurationsdatei
+sed -i "s/\"80:80\"/\"${HTTP_PORT}:80\"/g" seatable-server.yml
+sed -i "s/\"443:443\"/\"${HTTPS_PORT}:443\"/g" seatable-server.yml
 
-# Der KORREKTE Startbefehl
+# --- Docker Compose ausführen ---
 docker compose -f seatable-server.yml up -d
 
-bashio::log.info "SeaTable-Container wurden gestartet. Der erste Start kann mehrere Minuten dauern."
-bashio::log.info "Der Status der einzelnen SeaTable-Dienste ist in deren eigenen Logs ersichtlich, nicht unbedingt hier."
+bashio::log.info "SeaTable-Container wurden gestartet."
 
-# Endlosschleife, damit das Add-on aktiv bleibt
+# Endlosschleife
 while true; do
   sleep 3600
 done
