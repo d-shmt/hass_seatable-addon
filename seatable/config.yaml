@@ -1,39 +1,59 @@
-# /seatable/config.yaml
+# Der Name, der in Home Assistant angezeigt wird
 name: "SeaTable Server"
+
+# Eine kurze Beschreibung für den Add-on Store
 description: "SeaTable ist eine flexible No-Code-Plattform für Datenbanken und Projektmanagement. Dieses Add-on installiert den SeaTable Server."
-version: "0.1.0-dev" # Starte mit einer Entwicklungsversion
+
+# Version deines Add-ons
+version: "1.0.0"
+
+# Der eindeutige Bezeichner (Slug) für dein Add-on
 slug: "seatable"
+
+# Diese Zeile ist entscheidend, damit das Add-on Docker-Befehle ausführen darf
+docker_api: true
+
+# Startet das Add-on automatisch beim Hochfahren von Home Assistant
+boot: "auto"
+
+# Initialisierungsskripte werden nicht benötigt
 init: false
+
+# Die unterstützten Prozessor-Architekturen
 arch:
   - aarch64
   - amd64
   - armv7
 
-# Fügt einen Link zur Dokumentation im Add-on Store hinzu
+# Link zur Dokumentation oder deinem GitHub-Repository
 url: "https://github.com/d-shmt/hass_seatable-addon"
 
-boot: "auto"
-map:
-  - "ssl:rw" # Lese- und Schreibzugriff für SSL, falls SeaTable Zertifikate selbst verwalten soll
-
-# Standard-Konfigurationsoptionen
+# Standard-Konfigurationsoptionen, die der Benutzer ändern kann
 options:
-  http_port: 8080
-  https_port: 4433
+  http_port: 80
+  https_port: 443
 
-# Schema für die Konfigurations-UI
+# Definiert die Eingabefelder im Konfigurations-Tab des Add-ons
 schema:
   http_port: "port"
   https_port: "port"
 
-# Mappt die Ports aus der Konfiguration
+# Mappt die Ports des Add-ons auf die Ports des Host-Systems
 ports:
-  "80/tcp": null # Wird durch die Option unten dynamisch gesetzt
-  "443/tcp": null
+  "80/tcp": 80
+  "443/tcp": 443
 
+# Beschreibungen, die im Netzwerk-Tab des Add-ons angezeigt werden
 ports_description:
   "80/tcp": "SeaTable Web Interface (HTTP)"
   "443/tcp": "SeaTable Web Interface (HTTPS)"
 
-# Web-UI für den Ingress-Zugriff (optional, aber empfohlen)
+# Ermöglicht den "ÖFFNE WEB-UI" Button
 webui: "http://[HOST]:[PORT:80]"
+
+# Erlaubt dem Add-on, im Ingress-Modus zu laufen (als Iframe in HA)
+ingress: true
+# Das Panel-Icon für die Seitenleiste
+panel_icon: "mdi:database"
+# Der Titel, der in der Seitenleiste angezeigt wird
+panel_title: "SeaTable"
