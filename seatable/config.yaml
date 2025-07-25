@@ -1,21 +1,19 @@
 name: "SeaTable Server"
 description: "Installiert den SeaTable Server als Home Assistant Add-on."
-version: "2.3.0" # Finale Version
+version: "5.0.0" # Finale Version
 slug: "seatable"
 
 # --- Berechtigungen ---
-# Erlaubt dem Add-on, mit dem Docker-Dienst des Hosts zu kommunizieren
 docker_api: true
-# Erlaubt den Zugriff auf die HA-API (für Netzwerk-Infos)
 homeassistant_api: true
 
+# --- Grundkonfiguration ---
 boot: "auto"
 init: false
 arch:
   - aarch64
   - amd64
   - armv7
-
 url: "https://github.com/DEIN-GITHUB-NAME/seatable-hassio-addon"
 
 # --- Benutzer-Konfiguration ---
@@ -25,7 +23,6 @@ options:
   mariadb_password: ""
   seatable_admin_email: ""
   seatable_admin_pw: ""
-
 schema:
   http_port: "port"
   https_port: "port"
@@ -37,7 +34,6 @@ schema:
 ports:
   "80/tcp": 9080
   "443/tcp": 9443
-
 ports_description:
   "80/tcp": "SeaTable Web Interface (HTTP)"
   "443/tcp": "SeaTable Web Interface (HTTPS)"
