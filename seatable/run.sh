@@ -1,16 +1,14 @@
 #!/usr/bin/with-contenv bashio
 
-# --- Konfiguration auslesen ---
-# (Hier bleibt alles wie gehabt)
+# --- (Der obere Teil bleibt unverändert) ---
 
 # --- SeaTable Installation ---
-SEATABLE_DIR="/opt/seatable" # Verzeichnis ggf. anpassen
-if [ ! -f "${SEATABLE_DIR}/seatable.sh" ]; then
+SEATABLE_DIR="/opt/seatable"
+if [ ! -f "${SEATABLE_DIR}/seatable-compose/seatable.sh" ]; then
     bashio::log.info "Keine SeaTable-Installation gefunden. Lade die neueste Version herunter..."
     mkdir -p "${SEATABLE_DIR}"
     cd "${SEATABLE_DIR}" || bashio::exit.nok "Konnte nicht in das Verzeichnis wechseln."
     
-    # KORRIGIERTE DOWNLOAD-ZEILE
     wget -O seatable-compose.tar.gz "https://github.com/seatable/seatable-release/releases/latest/download/seatable-compose.tar.gz"
     
     tar -xzf seatable-compose.tar.gz
@@ -20,7 +18,9 @@ fi
 
 # --- SeaTable Start ---
 bashio::log.info "Starte den SeaTable Server..."
-cd "${SEATABLE_DIR}" || bashio::exit.nok "Konnte nicht in das SeaTable-Verzeichnis wechseln."
+
+# HIER IST DIE KORREKTUR: In das neu erstellte Verzeichnis wechseln
+cd "${SEATABLE_DIR}/seatable-compose" || bashio::exit.nok "Konnte nicht in das SeaTable-Unterverzeichnis wechseln."
 
 ./seatable.sh start
 
@@ -28,5 +28,5 @@ bashio::log.info "SeaTable wurde gestartet. Es kann einige Minuten dauern, bis d
 
 # Endlosschleife, damit das Add-on nicht beendet wird
 while true; do
-  sleep 3600 # Eine Stunde schlafen, um die CPU zu schonen
+  sleep 3600
 done
