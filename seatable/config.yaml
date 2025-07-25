@@ -1,6 +1,6 @@
 name: "SeaTable Server"
 description: "Installiert den SeaTable Server als Home Assistant Add-on."
-version: "2.1.0" # Versionsnummer erhöht
+version: "2.2.0"
 slug: "seatable"
 
 # --- Berechtigungen ---
@@ -35,6 +35,7 @@ schema:
 ports:
   "80/tcp": 9080
   "443/tcp": 9443
+
 ports_description:
   "80/tcp": "SeaTable Web Interface (HTTP)"
   "443/tcp": "SeaTable Web Interface (HTTPS)"
