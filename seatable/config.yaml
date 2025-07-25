@@ -1,11 +1,11 @@
 name: "SeaTable Server"
 description: "SeaTable ist eine flexible No-Code-Plattform für Datenbanken und Projektmanagement. Dieses Add-on installiert den SeaTable Server."
-version: "1.2.0" # Versionsnummer erhöht
+version: "1.3.0" # Versionsnummer erhöht
 slug: "seatable"
 
 # --- Berechtigungen ---
-docker_api: true
-homeassistant_api: true # DIESE ZEILE IST NEU UND BEHEBT DEN FEHLER
+# Gewährt vollen Zugriff, um alle Berechtigungsprobleme auszuschließen
+full_access: true
 
 boot: "auto"
 init: false
