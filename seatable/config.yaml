@@ -1,12 +1,13 @@
+# /seatable/config.yaml
+
+# Allgemeine Informationen
 name: "SeaTable Server"
-description: "SeaTable ist eine flexible No-Code-Plattform für Datenbanken und Projektmanagement. Dieses Add-on installiert den SeaTable Server."
-version: "1.3.0" # Versionsnummer erhöht
+description: "Installiert den SeaTable Server als Home Assistant Add-on."
+version: "2.0.0" # Starte mit einer neuen, sauberen Version
 slug: "seatable"
+url: "https://github.com/DEIN-GITHUB-NAME/seatable-hassio-addon" # Link zu deinem Projekt
 
-# --- Berechtigungen ---
-# Gewährt vollen Zugriff, um alle Berechtigungsprobleme auszuschließen
-full_access: true
-
+# Startverhalten und Architektur
 boot: "auto"
 init: false
 arch:
@@ -14,9 +15,14 @@ arch:
   - amd64
   - armv7
 
-url: "https://github.com/d-shmt/hass_seatable-addon"
+# Notwendige Berechtigungen
+# docker_api: Erlaubt dem Add-on, Docker-Container zu starten (für SeaTable unerlässlich)
+# homeassistant_api: Erlaubt den Zugriff auf die HA-API, um z.B. die IP-Adresse auszulesen
+docker_api: true
+homeassistant_api: true
 
-# --- Benutzer-Konfiguration ---
+# Benutzerdefinierte Konfiguration
+# Diese Optionen erscheinen im "Konfiguration"-Tab des Add-ons
 options:
   http_port: 9080
   https_port: 9443
@@ -27,17 +33,15 @@ schema:
   https_port: "port"
   mariadb_password: "password"
 
-# --- Netzwerk ---
+# Netzwerk-Konfiguration
 ports:
   "80/tcp": 9080
   "443/tcp": 9443
-
 ports_description:
   "80/tcp": "SeaTable Web Interface (HTTP)"
   "443/tcp": "SeaTable Web Interface (HTTPS)"
 
-# --- UI Integration ---
+# UI-Integration
 webui: "http://[HOST]:[PORT:80]"
-ingress: true
-panel_icon: "mdi:database"
-panel_title: "SeaTable"
+ingress: false # SeaTable ist eine zu komplexe Anwendung für Ingress
+panel_icon: "mdi:database-search"
