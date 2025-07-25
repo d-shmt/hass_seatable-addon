@@ -1,57 +1,39 @@
-# Der Name, der in Home Assistant angezeigt wird
 name: "SeaTable Server"
-
-# Eine kurze Beschreibung für den Add-on Store
 description: "SeaTable ist eine flexible No-Code-Plattform für Datenbanken und Projektmanagement. Dieses Add-on installiert den SeaTable Server."
-
-# Version deines Add-ons
-version: "1.0.1"
-
-# Der eindeutige Bezeichner (Slug) für dein Add-on
+version: "1.1.0"
 slug: "seatable"
-
-# Diese Zeile ist entscheidend, damit das Add-on Docker-Befehle ausführen darf
 docker_api: true
-
-# Startet das Add-on automatisch beim Hochfahren von Home Assistant
 boot: "auto"
-
-# Initialisierungsskripte werden nicht benötigt
 init: false
-
-# Die unterstützten Prozessor-Architekturen
 arch:
   - aarch64
   - amd64
   - armv7
 
-# Link zur Dokumentation oder deinem GitHub-Repository
 url: "https://github.com/d-shmt/hass_seatable-addon"
 
-# Standard-Konfigurationsoptionen, die der Benutzer ändern kann
+# Standard-Konfigurationsoptionen
 options:
+  http_port: 9080
+  https_port: 9443
   mariadb_password: ""
 
-# Definiert die Eingabefelder im Konfigurations-Tab des Add-ons
+# Definiert die Eingabefelder im Konfigurations-Tab
 schema:
+  http_port: "port"
+  https_port: "port"
   mariadb_password: "password"
 
-# Mappt die Ports des Add-ons auf die Ports des Host-Systems
+# Mappt die Ports aus den Optionen auf das Host-System
 ports:
-  "80/tcp": 80
-  "443/tcp": 443
+  "80/tcp": 9080
+  "443/tcp": 9443
 
-# Beschreibungen, die im Netzwerk-Tab des Add-ons angezeigt werden
 ports_description:
   "80/tcp": "SeaTable Web Interface (HTTP)"
   "443/tcp": "SeaTable Web Interface (HTTPS)"
 
-# Ermöglicht den "ÖFFNE WEB-UI" Button
 webui: "http://[HOST]:[PORT:80]"
-
-# Erlaubt dem Add-on, im Ingress-Modus zu laufen (als Iframe in HA)
 ingress: true
-# Das Panel-Icon für die Seitenleiste
 panel_icon: "mdi:database"
-# Der Titel, der in der Seitenleiste angezeigt wird
 panel_title: "SeaTable"
