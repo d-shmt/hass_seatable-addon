@@ -1,21 +1,39 @@
-# config.yaml
-name: "SeaTable"
-description: "SeaTable Server as a Home Assistant Add-on"
-version: "1.0.0"
+# /seatable/config.yaml
+name: "SeaTable Server"
+description: "SeaTable ist eine flexible No-Code-Plattform für Datenbanken und Projektmanagement. Dieses Add-on installiert den SeaTable Server."
+version: "0.1.0-dev" # Starte mit einer Entwicklungsversion
 slug: "seatable"
 init: false
 arch:
   - aarch64
   - amd64
-  - armhf
   - armv7
-  - i386
+
+# Fügt einen Link zur Dokumentation im Add-on Store hinzu
+url: "https://github.com/d-shmt/hass_seatable-addon"
+
 boot: "auto"
 map:
-  - "ssl"
+  - "ssl:rw" # Lese- und Schreibzugriff für SSL, falls SeaTable Zertifikate selbst verwalten soll
+
+# Standard-Konfigurationsoptionen
+options:
+  http_port: 8080
+  https_port: 4433
+
+# Schema für die Konfigurations-UI
+schema:
+  http_port: "port"
+  https_port: "port"
+
+# Mappt die Ports aus der Konfiguration
 ports:
-  "80/tcp": 8080
-  "443/tcp": 4433
+  "80/tcp": null # Wird durch die Option unten dynamisch gesetzt
+  "443/tcp": null
+
 ports_description:
   "80/tcp": "SeaTable Web Interface (HTTP)"
   "443/tcp": "SeaTable Web Interface (HTTPS)"
+
+# Web-UI für den Ingress-Zugriff (optional, aber empfohlen)
+webui: "http://[HOST]:[PORT:80]"
