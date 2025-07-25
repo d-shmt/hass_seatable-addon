@@ -8,9 +8,9 @@ FROM $BUILD_FROM
 # wget: zum Herunterladen
 # tar: zum Entpacken
 # sed: zum Bearbeiten von Textdateien (für die Port-Anpassung)
-# docker-cli & docker-compose-plugin: um SeaTable zu starten
+# docker-cli & docker-compose: um SeaTable zu starten
 # iproute2: für die alternative IP-Ermittlung
-RUN apk add --no-cache wget tar sed docker-cli docker-compose-plugin iproute2
+RUN apk add --no-cache wget tar sed docker-cli docker-compose iproute2
 
 # Kopiert das Start-Skript in das Image und macht es ausführbar
 COPY run.sh /
