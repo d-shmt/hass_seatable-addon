@@ -1,0 +1,1 @@
+# hass_seatable-addon
