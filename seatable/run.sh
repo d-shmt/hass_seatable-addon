@@ -16,7 +16,7 @@ ADMIN_PW=$(bashio::config 'seatable_admin_pw')
 
 # --- Validiere die Benutzereingaben ---
 if [ -z "$DB_PASSWORD" ] || [ -z "$ADMIN_EMAIL" ] || [ -z "$ADMIN_PW" ]; then
-    bashio::exit.nok "Wichtige Konfigurationswerte (DB-Passwort, Admin-E-Mail oder Admin-Passwort) fehlen. Bitte im 'Konfiguration'-Tab ausfüllen."
+    bashio::exit.nok "Wichtige Konfigurationswerte fehlen. Bitte im 'Konfiguration'-Tab ausfüllen."
 fi
 
 # --- Ermittle oder generiere systemische Werte ---
@@ -54,7 +54,7 @@ fi
 # ==============================================================================
 cd "${SEATABLE_DIR}" || bashio::exit.nok
 
-# --- Erstelle die .env Datei für Docker Compose (NEUE, ZUVERLÄSSIGE METHODE) ---
+# --- Erstelle die .env Datei für Docker Compose ---
 bashio::log.info "Schreibe Konfiguration in .env Datei..."
 cat > .env << EOF
 TIME_ZONE=${TIME_ZONE}
@@ -63,8 +63,9 @@ MARIADB_PASSWORD=${DB_PASSWORD}
 REDIS_PASSWORD=${REDIS_PASSWORD}
 JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY}
 SEATABLE_ADMIN_EMAIL=${ADMIN_EMAIL}
-SEATABLE_ADMIN_PW=${ADMIN_PW}
+SEATABLE_ADMIN_PASSWORD=${ADMIN_PW}
 EOF
+# HINWEIS: SEATABLE_ADMIN_PW wurde zu SEATABLE_ADMIN_PASSWORD korrigiert
 
 # --- Passe Ports in der docker-compose Datei an ---
 sed -i "s/\"80:80\"/\"${HTTP_PORT}:80\"/g" seatable-server.yml
