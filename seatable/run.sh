@@ -1,10 +1,9 @@
 #!/usr/bin/with-contenv bashio
 
-# --- (Der obere Teil bleibt unverändert) ---
-
-# --- SeaTable Installation ---
 SEATABLE_DIR="/opt/seatable"
-if [ ! -f "${SEATABLE_DIR}/seatable-compose/seatable.sh" ]; then
+
+# Prüfen, ob die Installation bereits vorhanden ist
+if [ ! -f "${SEATABLE_DIR}/seatable.sh" ]; then
     bashio::log.info "Keine SeaTable-Installation gefunden. Lade die neueste Version herunter..."
     mkdir -p "${SEATABLE_DIR}"
     cd "${SEATABLE_DIR}" || bashio::exit.nok "Konnte nicht in das Verzeichnis wechseln."
@@ -19,14 +18,15 @@ fi
 # --- SeaTable Start ---
 bashio::log.info "Starte den SeaTable Server..."
 
-# HIER IST DIE KORREKTUR: In das neu erstellte Verzeichnis wechseln
-cd "${SEATABLE_DIR}/seatable-compose" || bashio::exit.nok "Konnte nicht in das SeaTable-Unterverzeichnis wechseln."
+# Sicherstellen, dass wir im richtigen Verzeichnis sind
+cd "${SEATABLE_DIR}" || bashio::exit.nok "Konnte nicht in das SeaTable-Verzeichnis wechseln."
 
+# Das Start-Skript ausführen
 ./seatable.sh start
 
 bashio::log.info "SeaTable wurde gestartet. Es kann einige Minuten dauern, bis die Weboberfläche erreichbar ist."
 
-# Endlosschleife, damit das Add-on nicht beendet wird
+# Endlosschleife
 while true; do
   sleep 3600
 done
