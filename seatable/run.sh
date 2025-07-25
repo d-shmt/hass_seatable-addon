@@ -3,6 +3,18 @@
 # Daten im persistenten /data-Verzeichnis speichern
 SEATABLE_DIR="/data/seatable"
 
+# Passwort aus der Konfiguration lesen
+DB_PASSWORD=$(bashio::config 'mariadb_password')
+
+# Sicherstellen, dass ein Passwort gesetzt wurde
+if [ -z "$DB_PASSWORD" ]; then
+    bashio::log.fatal "Das MariaDB-Passwort ist nicht gesetzt! Bitte gehe zum 'Konfiguration'-Tab des Add-ons und setze ein sicheres Passwort."
+    bashio::exit.nok
+fi
+
+# Passwort als Umgebungsvariable für Docker Compose exportieren
+export MARIADB_PASSWORD=$DB_PASSWORD
+
 # Prüfen, ob die Installation bereits vorhanden ist
 if [ ! -f "${SEATABLE_DIR}/seatable-server.yml" ]; then
     bashio::log.info "Keine SeaTable-Installation gefunden. Lade die neueste Version herunter..."
